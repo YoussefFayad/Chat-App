@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Chat-App</string>
+    <string name="login">Login</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="icon_arrow_right">icon arrow right</string>
+    <string name="icon_back">icon back</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="or_create_my_account">or create my account</string>
+    <string name="forgot_password">Forgot password?</string>
 </resources>

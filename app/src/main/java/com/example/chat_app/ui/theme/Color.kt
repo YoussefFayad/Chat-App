@@ -11,4 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val ProgressColor = Color(0xFF03A9F4)
-
+val Black = Color(0XFF303030)
+val Black2 = Color(0XFF505050)
+val Blue = Color(0XFF3598DB)
+val Gray = Color(0xFF949393)
