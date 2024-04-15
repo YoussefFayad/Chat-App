@@ -13,20 +13,22 @@
         android:theme="@style/Theme.ChatApp"
         tools:targetApi="31">
         <activity
-            android:name= ".splash.SplashActivity"
+            android:name=".register.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".splash.SplashActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ChatApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".login.LoginActivity"/>
-        <activity android:name=".home.HomeActivity"/>
-
+        <activity android:name=".login.LoginActivity" />
+        <activity android:name=".home.HomeActivity" />
+        <activity android:name=".addroom.AddRoomActivity"/>
+        <activity android:name=".chat.ChatActivity"/>
     </application>
 
 </manifest>

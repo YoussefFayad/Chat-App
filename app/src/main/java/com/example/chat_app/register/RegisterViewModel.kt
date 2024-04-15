@@ -1,4 +1,4 @@
-package com.example.chat_app.login
+package com.example.chat_app.register
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -9,57 +9,59 @@ import com.example.chat_app.model.DataUtils
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
-class LoginViewModel : ViewModel() {
+class RegisterViewModel : ViewModel() {
+    val firstnameState = mutableStateOf("")
+    val firstnameErrorState = mutableStateOf<String?>(null)
     val emailState = mutableStateOf("")
     val emailErrorState = mutableStateOf<String?>(null)
     val passwordState = mutableStateOf("")
     val passwordErrorState = mutableStateOf<String?>(null)
     val auth = Firebase.auth
     val isLoading = mutableStateOf(false)
-    val event = mutableStateOf<LoginEvent>(LoginEvent.Idle)
+    val events = mutableStateOf<RegisterEvent>(RegisterEvent.Idle)
 
-    fun navigateTORegister(){
-        event.value =LoginEvent.NavigateToRegister
-    }
-    fun navigateToHome(user: AppUser){
-        event.value = LoginEvent.NavigateToHome(user)
-    }
 
-    fun resetEvent(){
-        event.value = LoginEvent.Idle
-    }
 
-    fun login(){
+
+
+    fun register(){
         if(validateFields()){
             isLoading.value = true
-            auth.signInWithEmailAndPassword(emailState.value,passwordState.value)
+            auth.createUserWithEmailAndPassword(emailState.value,passwordState.value)
                 .addOnCompleteListener { task ->
                     if (!task.isSuccessful){
                         isLoading.value = false
-                        Log.d("TAG Exception Login ","${task.exception?.message}")
+                        Log.d("TAG Exception Register ","${task.exception?.message}")
                         return@addOnCompleteListener
                     }
                     val uid = task.result.user?.uid
-                    getUserFromFireStore(uid!!)
+                    // Add user to cloud Fire-store
+                    addUserToFirestore(uid)
 
                 }
-
         }
     }
 
-
-    private fun getUserFromFireStore(uid:String){
-        FirebaseUtils.getUser(uid, onSuccessListener = { documentSnapshot ->
+    private fun addUserToFirestore(uid: String?){
+        val user = AppUser(uid , firstnameState.value, emailState.value)
+        FirebaseUtils.addUser(user, onSuccessListener = {
             isLoading.value = false
-            val user = documentSnapshot.toObject(AppUser::class.java)
             DataUtils.appUser = user
-            navigateToHome(user!!)
+            events.value = RegisterEvent.NavigateToHome(user)
         }, onFailureListener = {
-            isLoading.value = false
+            isLoading.value =false
+            Log.d("TAG Exception addUserToFirestore: ","${it.message}" )
         })
+
     }
 
     private fun validateFields(): Boolean{
+        if (firstnameState.value.isEmpty() && firstnameState.value.isBlank()){
+            firstnameErrorState.value= "Required"
+            return false
+        }else{
+            firstnameErrorState.value =null
+        }
 
         if (emailState.value.isEmpty() && emailState.value.isBlank()){
             emailErrorState.value= "Required"
@@ -85,4 +87,3 @@ class LoginViewModel : ViewModel() {
         return true
     }
 }
-

@@ -1,5 +1,7 @@
 package com.example.chat_app.login
 
+import android.app.PendingIntent.OnFinished
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,21 +30,26 @@ import com.example.chat_app.R
 import com.example.chat_app.ui.theme.Black
 import com.example.chat_app.utils.ChatToolBar
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.chat_app.home.HomeActivity
+import com.example.chat_app.register.RegisterActivity
 import com.example.chat_app.ui.theme.Black2
-import com.example.chat_app.utils.ChatAuthButton
+import com.example.chat_app.utils.ChatAuthLoginButton
 import com.example.chat_app.utils.ChatAuthTextField
+import com.example.chat_app.utils.LoadingDialog
 
 class LoginActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LoginContent()
+            LoginContent{
+                finish()
+            }
         }
     }
 }
 
 @Composable
-private fun LoginContent(viewModel: LoginViewModel = viewModel()){
+private fun LoginContent(viewModel: LoginViewModel = viewModel(),onFinish: () -> Unit){
     Scaffold(topBar = {
         ChatToolBar(title = stringResource(R.string.login))
     }) {
@@ -74,10 +82,13 @@ private fun LoginContent(viewModel: LoginViewModel = viewModel()){
             ChatAuthTextField(
                 state = viewModel.passwordState,
                 error = viewModel.passwordErrorState.value,
-                label = stringResource(R.string.password)
+                label = stringResource(R.string.password),
+                isPassword = true
             )
             Spacer(modifier = Modifier.height(5.dp))
-            TextButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(start = 10.dp).align(Alignment.Start)) {
+            TextButton(onClick = { /*TODO*/ }, modifier = Modifier
+                .padding(start = 10.dp)
+                .align(Alignment.Start)) {
                 Text(
                     text = stringResource(R.string.forgot_password),
                     color = Black2,
@@ -87,10 +98,16 @@ private fun LoginContent(viewModel: LoginViewModel = viewModel()){
             }
 
             Spacer(modifier = Modifier.height(5.dp))
-            ChatAuthButton(title = stringResource(id = R.string.login)) {}
-
+            ChatAuthLoginButton(title = stringResource(id = R.string.login), onClick ={
+                viewModel.login()
+            })
             Spacer(modifier = Modifier.height(5.dp))
-            TextButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(start = 10.dp).align(Alignment.Start)) {
+            TextButton(
+                onClick = {
+                viewModel.navigateTORegister()
+            }, modifier = Modifier
+                    .padding(start = 10.dp)
+                    .align(Alignment.Start)) {
                 Text(
                     text = stringResource(R.string.or_create_my_account),
                     color = Black2,
@@ -102,10 +119,40 @@ private fun LoginContent(viewModel: LoginViewModel = viewModel()){
 
         }
     }
+    TriggerEvents(event = viewModel.event.value){
+        onFinish()
+    }
+    LoadingDialog(isLoading = viewModel.isLoading)
+}
+
+
+@Composable
+fun TriggerEvents(
+    event: LoginEvent,
+    viewModel: LoginViewModel = viewModel(),
+    onFinish :() -> Unit
+){
+    val context = LocalContext.current
+    when(event){
+        LoginEvent.Idle -> {}
+
+        is LoginEvent.NavigateToHome -> {
+            val intent = Intent(context, HomeActivity::class.java)
+            context.startActivity(intent)
+            onFinish()
+
+        }
+        LoginEvent.NavigateToRegister -> {
+            val intent = Intent(context, RegisterActivity::class.java)
+            context.startActivity(intent)
+            viewModel.resetEvent()
+        }
+
+    }
 }
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-private fun PreviewLoginScreen(){
-    LoginContent()
+private fun LoginScreenPreview(){
+    LoginContent{}
 }

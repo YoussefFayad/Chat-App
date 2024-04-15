@@ -8,4 +8,23 @@
     <string name="password">Password</string>
     <string name="or_create_my_account">or create my account</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="create_account">Create Account</string>
+    <string name="first_name">First Name</string>
+    <string name="chat_app">Chat App</string>
+    <string name="icon_add_room">icon add room</string>
+    <string name="title_activity_add_room">AddRoomActivity</string>
+    <string name="create_new_room">Create New Room</string>
+    <string name="group_image">group image</string>
+    <string name="room_name">Room name</string>
+    <string name="room_desc">Room Description</string>
+    <string name="category_selection_icon">category selection icon</string>
+    <string name="category_image_selection">Category Image Selection</string>
+    <string name="create">Create</string>
+    <string name="selected_category_image">Selected Category Image</string>
+    <string name="category_image">category Image</string>
+    <string name="room_category_image">Room Category Image</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="send">Send</string>
+    <string name="icon_send_a_message">icon send a message</string>
 </resources>

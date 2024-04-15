@@ -7,7 +7,6 @@ import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import com.example.chat_app.R
 import com.example.chat_app.ui.theme.ProgressColor
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.chat_app.Constants
+import com.example.chat_app.home.HomeActivity
 import com.example.chat_app.login.LoginActivity
 
 
@@ -51,7 +52,7 @@ fun SplashContent(viewModel: SplashViewModel= viewModel(), onFinish :() -> Unit)
         Handler(Looper.getMainLooper()).postDelayed(
             {
                 viewModel.navigate()
-            },2000
+            },1000
         )
     }
 
@@ -98,8 +99,11 @@ fun TriggerEvents(
     val context = LocalContext.current
     when(event){
         SplashEvent.Idle -> {}
-        SplashEvent.NavigateToHome -> {
-            val intent = Intent(context,LoginActivity::class.java)
+
+        is SplashEvent.NavigateToHome -> {
+            val intent = Intent(context,HomeActivity ::class.java)
+            //Parcelable
+            intent.putExtra(Constants.USER_Key,event.user)
             context.startActivity(intent)
             onFinish()
         }
@@ -113,6 +117,6 @@ fun TriggerEvents(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PreviewSplashContent() {
+fun SplashContentPreview() {
     SplashContent{}
 }
