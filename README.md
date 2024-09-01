@@ -27,7 +27,7 @@ A **Chat Application** is a group chat app designed with **Kotlin**, **Jetpack C
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YoussefFayad/Chat-App
+   git clone https://github.com/YoussefFayad/Chat-App.git
    ```
 2. Open the project in Android Studio.
 3. Connect to Firebase:
